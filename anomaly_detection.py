@@ -63,7 +63,9 @@ def eval_model(args):
     print(f"* evaluation data loaded from {data_path}")
 
     # 学習済みモデルの読み込み
-    # ここを実装する
+    model_path = os.path.abspath(args.model)
+    with open(model_path, "rb") as f:
+        clf = pickle.load(f)
     print(f"* trained model loaded from {model_path}")
 
     # 評価の実行
@@ -73,6 +75,11 @@ def eval_model(args):
     # 評価結果の保存
     out_path = _create_folder(args.out)
     png_path = os.path.join(out_path, "histogram.png")
+    plt.figure()
+    sns.histplot(clf.decision_scores_, bins = 50, kde=True)
+    plt.vlines(clf.threshold_, ymin=0, ymax=90, color='red')
+    plt.savefig(png_path)
+    plt.close()
     # ここを実装する
     print(f"* result save to {out_path}")
 
